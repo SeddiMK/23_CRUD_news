@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NewsItem } from "@/types/general";
+import "./style.scss";
 
 type Props = {
   onSave: (news: NewsItem) => void;
@@ -14,6 +15,8 @@ export const NewsForm: React.FC<Props> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (editingNews) {
@@ -21,6 +24,20 @@ export const NewsForm: React.FC<Props> = ({
       setContent(editingNews.content);
     }
   }, [editingNews]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    }
+  }, [title]);
 
   const handleSubmit = () => {
     if (!title || !content) return alert("Заполните все поля");
@@ -35,22 +52,34 @@ export const NewsForm: React.FC<Props> = ({
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Заголовок"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        placeholder="Контент"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <button onClick={handleSubmit}>
-        {editingNews ? "Обновить" : "Добавить"}
-      </button>
-      {onCancel && <button onClick={onCancel}>Отмена</button>}
+    <div className="news">
+      <div className="news__content">
+        <textarea
+          className="news__inp"
+          placeholder="Заголовок"
+          ref={inputRef}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          className="news__text"
+          placeholder="Контент"
+          value={content}
+          ref={textareaRef}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
+
+      <div className="news__buttons">
+        <button className="btn" onClick={handleSubmit}>
+          {editingNews ? "Обновить" : "Добавить"}
+        </button>
+        {onCancel && (
+          <button className="btn" onClick={onCancel}>
+            Отмена
+          </button>
+        )}
+      </div>
     </div>
   );
 };

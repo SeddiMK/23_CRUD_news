@@ -6,19 +6,11 @@ import {
 } from "@/utils/localStorageHelper";
 import { NewsForm } from "@/components/NewsForm";
 import { NewsList } from "@/components/NewsList";
+import "./style.scss";
 
 export const Home: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
-
-  useEffect(() => {
-    const savedNews = getFromLocalStorage<NewsItem[]>("news");
-    if (savedNews) setNews(savedNews);
-  }, []);
-
-  useEffect(() => {
-    saveToLocalStorage("news", news);
-  }, [news]);
 
   const handleSave = (newItem: NewsItem) => {
     if (editingNews) {
@@ -30,23 +22,35 @@ export const Home: React.FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    const item = news.find((n) => n.id === id);
-    if (item) setEditingNews(item);
+    const items = news.filter((n) => n.id === id);
+    if (items.length > 0) setEditingNews(items[0]);
   };
 
   const handleDelete = (id: string) => {
     setNews(news.filter((n) => n.id !== id));
   };
 
+  useEffect(() => {
+    const savedNews = getFromLocalStorage<NewsItem[]>("news");
+    if (savedNews) setNews(savedNews);
+  }, []);
+
+  useEffect(() => {
+    saveToLocalStorage("news", news);
+  }, [news]);
+
+  // className={style.wrapper}
   return (
-    <div>
-      <h1>CRUD Новостей</h1>
-      <NewsForm
-        onSave={handleSave}
-        editingNews={editingNews}
-        onCancel={() => setEditingNews(null)}
-      />
-      <NewsList news={news} onEdit={handleEdit} onDelete={handleDelete} />
-    </div>
+    <main>
+      <div className="container">
+        <h1>CRUD Новостей</h1>
+        <NewsForm
+          onSave={handleSave}
+          editingNews={editingNews}
+          onCancel={() => setEditingNews(null)}
+        />
+        <NewsList news={news} onEdit={handleEdit} onDelete={handleDelete} />
+      </div>
+    </main>
   );
 };

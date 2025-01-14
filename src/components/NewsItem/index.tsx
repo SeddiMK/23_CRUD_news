@@ -1,5 +1,5 @@
-import React from "react";
 import { NewsItem } from "@/types/general";
+import "./style.scss";
 
 type Props = {
   news: NewsItem;
@@ -13,11 +13,20 @@ export const NewsItemComponent: React.FC<Props> = ({
   onDelete,
 }) => {
   return (
-    <div>
-      <h2>{news.title}</h2>
-      <p>{news.content}</p>
-      <button onClick={() => onEdit(news.id)}>Редактировать</button>
-      <button onClick={() => onDelete(news.id)}>Удалить</button>
+    <div className="list">
+      <div className="list__content">
+        <h2 className="list__title">{news.title}</h2>
+        <p className="list__text">{news.content}</p>
+      </div>
+
+      <div className="list__buttons">
+        <button className="btn" onClick={() => onEdit(news.id)}>
+          Редактировать
+        </button>
+        <button className="btn del" onClick={() => onDelete(news.id)}>
+          Удалить
+        </button>
+      </div>
     </div>
   );
 };

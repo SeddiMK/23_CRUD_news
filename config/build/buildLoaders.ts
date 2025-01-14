@@ -7,15 +7,55 @@ export const buildLoaders = ({
 }: BuildOptions): ModuleOptions["rules"] => {
   const isDev = mode === "development";
 
-  const cssLoader = {
-    test: /\.((c|sa|sc)ss)$/i,
+  // const cssLoader = {
+  //   test: /\.((c|sa|sc)ss)$/i,
+  //   use: [
+  //     isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+  //     {
+  //       loader: "css-loader",
+  //     },
+
+  //     "sass-loader",
+  //   ],
+  // };
+
+  // Лоадер для обычных CSS/SCSS файлов
+  const cssAndScssLoader = {
+    test: /\.(css|scss|sass)$/i,
     use: [
       isDev ? "style-loader" : MiniCssExtractPlugin.loader,
       {
         loader: "css-loader",
+        options: {
+          modules: {
+            // Поддержка CSS-модулей только для файлов с .module.css/.module.scss
+            auto: /\.module\.\w+$/i,
+            localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64:8]",
+          },
+          sourceMap: isDev,
+        },
       },
+      {
+        loader: "sass-loader",
+        options: {
+          sourceMap: isDev,
+        },
+      },
+    ],
+  };
 
-      "sass-loader",
+  const scssLoader = {
+    test: /\.module\.css$/i,
+    use: [
+      isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+      {
+        loader: "css-loader",
+        options: {
+          modules: {
+            localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64]",
+          },
+        },
+      },
     ],
   };
 
@@ -29,24 +69,11 @@ export const buildLoaders = ({
     type: "asset/resource",
   };
 
-  const scssLoader = {
-    test: /\.s[ac]ss$/i,
-    use: [
-      // Creates `style` nodes from JS strings
-
-      isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-      // Translates CSS into CommonJS
-      "css-loader",
-      // Compiles Sass to CSS
-      "sass-loader",
-    ],
-  };
-
   const tsLoader = {
     test: /\.tsx?$/,
     use: "ts-loader",
     exclude: /node_modules/,
   };
 
-  return [fontsLoader, cssLoader, assetLoader, tsLoader];
+  return [fontsLoader, cssAndScssLoader, assetLoader, tsLoader];
 };

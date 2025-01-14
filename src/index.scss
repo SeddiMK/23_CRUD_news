@@ -1,6 +1,7 @@
 :root {
   --black: #aaaaaa;
   --white: #f3f3f3;
+  --red: #ff5858;
   --green: #59be6e;
   --green-active: #2e703a;
 
@@ -15,13 +16,13 @@
 }
 
 body {
+  font-size: 18px;
   margin: 0;
   font-family: "Verdana", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   background-color: var(--bg-color-main);
-  /* background-image: url("../public/assets/images/bg/dylan_3.jpg"); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -41,6 +42,7 @@ main {
   -ms-flex-pack: center;
   justify-content: center;
   width: 100vw;
+  height: 100vh;
   overflow-x: hidden;
 }
 
@@ -48,6 +50,7 @@ main {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  gap: 0.9rem;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
@@ -69,6 +72,8 @@ main {
 
 /* -------------------- btn ------------------- */
 .btn {
+  display: inline-block;
+  min-width: fit-content;
   background-color: var(--bg-color-btn);
 
   border-radius: 0.6rem;
@@ -77,12 +82,6 @@ main {
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   padding: 0.5rem;
-}
-.style-cards__buttons .btn {
-  text-transform: capitalize;
-}
-.btn-style-cards {
-  border: 1px solid var(--btn-border);
 }
 
 .btn:hover {
@@ -104,6 +103,9 @@ main {
     rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-.btn-my-cards {
-  margin-bottom: 1rem;
+.del:hover {
+  background-color: var(--red);
+}
+.del:active {
+  color: var(--btn-border);
 }
