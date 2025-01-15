@@ -39,7 +39,6 @@ export const Home: React.FC = () => {
     saveToLocalStorage("news", news);
   }, [news]);
 
-  // className={style.wrapper}
   return (
     <main>
       <div className="container">
