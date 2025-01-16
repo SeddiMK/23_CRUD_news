@@ -9,8 +9,10 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
@@ -23,5 +25,5 @@
       "module": "CommonJS"
     }
   },
-  "include": ["src/**/*", "webpack.config.ts"]
+  "include": ["src/**/*", "webpack.config.ts", "./src/types/declarations.d.ts"]
 }

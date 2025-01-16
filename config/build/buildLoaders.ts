@@ -7,34 +7,32 @@ export const buildLoaders = ({
 }: BuildOptions): ModuleOptions["rules"] => {
   const isDev = mode === "development";
 
-  // const cssLoader = {
-  //   test: /\.((c|sa|sc)ss)$/i,
-  //   use: [
-  //     isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-  //     {
-  //       loader: "css-loader",
-  //     },
+  // Общие настройки css-loader для модулей
+  const cssLoaderWithModules = {
+    loader: "css-loader",
+    options: {
+      esModule: false,
+      modules: {
+        namedExport: false,
+        localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64:8]",
+      },
+    },
+  };
 
-  //     "sass-loader",
-  //   ],
-  // };
+  // Общие настройки css-loader для обычных файлов
+  const cssLoader = {
+    loader: "css-loader",
+    options: {
+      sourceMap: isDev,
+    },
+  };
 
-  // Лоадер для обычных CSS/SCSS файлов
-  const cssAndScssLoader = {
-    test: /\.(css|scss|sass)$/i,
+  // Лоадер для module.scss
+  const moduleScssLoader = {
+    test: /\.module\.s[ac]ss$/i,
     use: [
       isDev ? "style-loader" : MiniCssExtractPlugin.loader,
-      {
-        loader: "css-loader",
-        options: {
-          modules: {
-            // Поддержка CSS-модулей только для файлов с .module.css/.module.scss
-            auto: /\.module\.\w+$/i,
-            localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64:8]",
-          },
-          sourceMap: isDev,
-        },
-      },
+      cssLoaderWithModules,
       {
         loader: "sass-loader",
         options: {
@@ -44,19 +42,36 @@ export const buildLoaders = ({
     ],
   };
 
-  const scssLoader = {
+  // Лоадер для module.css
+  const moduleCssLoader = {
     test: /\.module\.css$/i,
     use: [
       isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+      cssLoaderWithModules,
+    ],
+  };
+
+  // Лоадер для обычных scss
+  const scssLoader = {
+    test: /\.s[ac]ss$/i,
+    exclude: /\.module\.s[ac]ss$/i, // Исключаем файлы module.scss
+    use: [
+      isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+      cssLoader,
       {
-        loader: "css-loader",
+        loader: "sass-loader",
         options: {
-          modules: {
-            localIdentName: isDev ? "[path][name]__[local]" : "[hash:base64]",
-          },
+          sourceMap: isDev,
         },
       },
     ],
+  };
+
+  // Лоадер для обычных css
+  const cssFileLoader = {
+    test: /\.css$/i,
+    exclude: /\.module\.css$/i, // Исключаем файлы module.css
+    use: [isDev ? "style-loader" : MiniCssExtractPlugin.loader, cssLoader],
   };
 
   const assetLoader = {
@@ -75,5 +90,13 @@ export const buildLoaders = ({
     exclude: /node_modules/,
   };
 
-  return [fontsLoader, cssAndScssLoader, assetLoader, tsLoader];
+  return [
+    moduleCssLoader,
+    moduleScssLoader,
+    cssFileLoader,
+    scssLoader,
+    fontsLoader,
+    assetLoader,
+    tsLoader,
+  ];
 };

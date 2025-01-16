@@ -6,7 +6,7 @@ import {
 } from "@/utils/localStorageHelper";
 import { NewsForm } from "@/components/NewsForm";
 import { NewsList } from "@/components/NewsList";
-import "./style.scss";
+import styles from "./Home.module.scss";
 
 export const Home: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -41,7 +41,7 @@ export const Home: React.FC = () => {
 
   return (
     <main>
-      <div className="container">
+      <div className={styles.container}>
         <h1>CRUD Новостей</h1>
         <NewsForm
           onSave={handleSave}
